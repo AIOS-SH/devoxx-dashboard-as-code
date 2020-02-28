@@ -6,7 +6,7 @@ PROM_OPTIONS = --set grafana.ingress.hosts[0]=$(GRAFANA_URL) --set prometheus.in
 
 prereq:
 	helm repo add stable https://kubernetes-charts.storage.googleapis.com
-	k get ns monitoring || k create ns monitoring
+	k get ns monitoring > /dev/null|| k create ns monitoring
 
 prom: prereq
 	helm upgrade --install prom stable/prometheus-operator --namespace monitoring $(PROM_OPTIONS) -f prometheus-operator.yml

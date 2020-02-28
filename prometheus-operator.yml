@@ -6,3 +6,9 @@ grafana:
 prometheus:
   ingress:
     enabled: true
+
+kubeEtcd:
+  enabled: false
+
+kubeProxy:
+  enabled: false
