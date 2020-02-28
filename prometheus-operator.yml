@@ -1,0 +1,8 @@
+grafana:
+  ingress:
+    enabled: true
+  plugins: ["grafana-diagram"]
+
+prometheus:
+  ingress:
+    enabled: true
