@@ -1,7 +1,7 @@
 grafana:
   ingress:
     enabled: true
-  plugins: ["grafana-diagram"]
+  plugins: ["jdbranham-diagram-panel"]
 
 prometheus:
   ingress:
