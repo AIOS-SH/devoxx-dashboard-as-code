@@ -6,6 +6,12 @@ PROMETHEUS_URL = prometheus.$(IP).nip.io
 
 PROM_OPTIONS = --set grafana.ingress.hosts[0]=$(GRAFANA_URL) --set prometheus.ingress.hosts[0]=$(PROMETHEUS_URL)
 
+DASHBOARDS   = $(shell ls dashboards)
+
+all: prereq grafonnet-lib $(DASHBOARDS)
+
+dashboards: $(DASHBOARDS)
+
 prereq:
 	helm repo add stable https://kubernetes-charts.storage.googleapis.com
 	k get ns monitoring > /dev/null|| k create ns monitoring
@@ -27,3 +33,10 @@ jsonnet/grafonnet-lib:
 
 grafonnet-lib: jsonnet/grafonnet-lib bin/jsonnet
 	cd jsonnet/grafonnet-lib && git pull
+
+json:
+	mkdir json
+
+%.jsonnet: json
+	bin/jsonnet -J jsonnet/grafonnet-lib dashboards/$*.jsonnet > json/$*.json
+

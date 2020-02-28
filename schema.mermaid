@@ -1,0 +1,10 @@
+graph TD
+  subgraph master
+    apiserver -.-> kube-scheduler
+    apiserver -.-> kube-controller-manager
+  end
+  subgraph monitoring
+    prometheus-operator -.-> apiserver
+    grafana -.-> prometheus-operator
+    prometheus-operator -.-> alertmanager
+  end
