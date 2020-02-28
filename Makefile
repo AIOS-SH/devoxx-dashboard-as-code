@@ -1,3 +1,5 @@
+JSONNET_URL   ?= https://github.com/google/jsonnet/releases/download/v0.15.0/jsonnet-bin-v0.15.0-linux.tar.gz
+
 IP             = $(shell minikube ip)
 GRAFANA_URL    = grafana.$(IP).nip.io
 PROMETHEUS_URL = prometheus.$(IP).nip.io
@@ -15,3 +17,13 @@ start:
 	minikube start
 stop:
 	minikube stop
+
+bin/jsonnet:
+	mkdir -p bin
+	cd bin && wget -q -O - $(JSONNET_URL) | tar xfz -
+
+jsonnet/grafonnet-lib:
+	git clone https://github.com/grafana/grafonnet-lib.git jsonnet/grafonnet-lib
+
+grafonnet-lib: jsonnet/grafonnet-lib bin/jsonnet
+	cd jsonnet/grafonnet-lib && git pull
