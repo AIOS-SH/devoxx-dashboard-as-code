@@ -22,14 +22,9 @@ local kubeSchema = {
   type: "jdbranham-diagram-panel",
   targets: [
     {
-      expr: "up",
-      legendFormat: "{{ job }}",
-      refId: "A"
-    },
-    {
       expr: "kube_pod_container_status_running",
       legendFormat: "{{ container }}",
-      refId: "B"
+      refId: "A"
     }
   ],
 };
