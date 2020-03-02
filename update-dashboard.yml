@@ -1,0 +1,16 @@
+---
+
+- name: "Update dashboards"
+  hosts: localhost
+  gather_facts: no
+  vars:
+    ansible_connection: local
+    ansible_python_interpreter: "/usr/bin/python3"
+  tasks:
+    - name: "Create configmap for dashboard"
+      command: kubectl apply -f -
+      args:
+        stdin: "{{ lookup('template', 'dashboard-configmap.yml.j2') }}"
+      register: _
+      changed_when: "'unchanged' not in _.stdout|d('')"
+      loop: "{{ dashboards.split(',') }}"
