@@ -1,10 +1,12 @@
 graph TD
   subgraph master
+    kubernetes-dashboard -.-> apiserver
     apiserver -.-> kube-scheduler
     apiserver -.-> kube-controller-manager
   end
   subgraph monitoring
     prometheus-operator -.-> apiserver
-    grafana -.-> prometheus-operator
-    prometheus-operator -.-> alertmanager
+    prometheus-operator -.-> prometheus
+    prometheus -.-> alertmanager
+    grafana -.-> prometheus
   end

@@ -7,18 +7,17 @@ local prometheus = grafana.prometheus;
 
 local kubeSchema = {
   content: importstr "schema.mermaid",
+  "colors": [
+    "rgba(245, 54, 54, 0.9)",
+    "rgba(50, 172, 45, 0.97)"
+  ],
   legend: {
-    avg: true,
-    current: true,
-    gradient: {
-      enabled: false,
-      show: true
-    },
-    max: true,
-    min: true,
+    gradient: { enabled: false, show: true },
     show: false,
-    total: true
   },
+  decimals: 0,
+  format: "percentunit",
+  thresholds: "0,1",
   title: "Kube schema",
   type: "jdbranham-diagram-panel",
   targets: [
