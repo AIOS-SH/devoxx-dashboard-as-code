@@ -1,5 +1,5 @@
 PYTHON        ?= $(shell ls -1U /usr/bin/python3 /usr/local/bin/python3 /usr/bin/python 2> /dev/null | head -1)
-JSONNET_URL   ?= https://github.com/google/jsonnet/releases/download/v0.15.0/jsonnet-bin-v0.15.0-linux.tar.gz
+JSONNET_URL   ?= https://github.com/google/jsonnet/releases/download/v0.16.0/jsonnet-bin-v0.16.0-linux.tar.gz
 
 IP             = $(shell minikube ip)
 GRAFANA_URL    = grafana.$(IP).nip.io
