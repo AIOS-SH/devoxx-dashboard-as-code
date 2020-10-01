@@ -13,12 +13,19 @@ all: prereq grafonnet-lib $(DASHBOARDS)
 
 dashboards: $(DASHBOARDS)
 
-prereq:
-	helm repo add stable https://kubernetes-charts.storage.googleapis.com
-	k get ns monitoring > /dev/null|| k create ns monitoring
+ingress:
+	minikube addons enable ingress
+
+ns:
+	kubectl get ns monitoring > /dev/null || kubectl create ns monitoring
+
+chart-repo:
+	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+prereq: ingress ns chart-repo
 
 prom: prereq
-	helm upgrade --install prom stable/prometheus-operator --namespace monitoring $(PROM_OPTIONS) -f config/prometheus-operator.yml
+	helm upgrade --install prom prometheus-community/kube-prometheus-stack --namespace monitoring $(PROM_OPTIONS) -f config/prometheus-operator.yml
 
 start:
 	minikube start
@@ -43,5 +50,5 @@ json:
 
 update-dashboards: dashboards
 	ansible-playbook -i localhost, update-dashboard.yml \
-    			-e ansible_python_interpreter=$(PYTHON) \
-    			-e dashboards=`ls json | sed 's/\.json$$//' | xargs echo | sed 's/ /,/g'`
+		-e ansible_python_interpreter=$(PYTHON) \
+		-e dashboards=`ls json | sed 's/\.json$$//' | xargs echo | sed 's/ /,/g'`
