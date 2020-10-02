@@ -5,6 +5,9 @@ IP             = $(shell minikube ip)
 GRAFANA_URL    = grafana.$(IP).nip.io
 PROMETHEUS_URL = prometheus.$(IP).nip.io
 
+HELM_INSTALL  ?= false
+HELM_UPGRADE  ?= $(shell $(HELM_INSTALL) || echo diff) upgrade --install $(shell $(HELM_INSTALL) || echo -C 5)
+
 PROM_OPTIONS = --set grafana.ingress.hosts[0]=$(GRAFANA_URL) --set prometheus.ingress.hosts[0]=$(PROMETHEUS_URL)
 
 DASHBOARDS   = $(shell ls dashboards | grep jsonnet)
@@ -26,6 +29,9 @@ prereq: ingress ns chart-repo
 
 prom: prereq
 	helm upgrade --install prom prometheus-community/kube-prometheus-stack --namespace monitoring $(PROM_OPTIONS) -f config/prometheus-operator.yml
+
+deploy-blackbox:
+	helm $(HELM_UPGRADE) blackbox stable/prometheus-blackbox-exporter --namespace monitoring
 
 start:
 	minikube start
