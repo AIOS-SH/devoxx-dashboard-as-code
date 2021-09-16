@@ -1,0 +1,12 @@
+---
+
+grafana:
+  ingress:
+    enabled: true
+    hosts: ["grafana.localhost.nip.io"]
+  plugins: ["jdbranham-diagram-panel"]
+
+prometheus:
+  ingress:
+    enabled: true
+    hosts: ["prometheus.localhost.nip.io"]
