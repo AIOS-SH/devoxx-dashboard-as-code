@@ -18,9 +18,7 @@ json:
 	mkdir json
 
 %.jsonnet: json
-	bin/jsonnet -J grafonnet-lib dashboards/$*.jsonnet > json/$*.json
+	bin/jsonnet -J grafonnet-lib dashboards/$*.jsonnet > charts/dashboards/files/$*.json
 
-update-dashboards: dashboards
-	ansible-playbook -i localhost, update-dashboard.yml \
-		-e ansible_python_interpreter=$(PYTHON) \
-		-e dashboards=`ls json | sed 's/\.json$$//' | xargs echo | sed 's/ /,/g'`
+deploy-dashboards: dashboards
+	helm $(HELM_UPGRADE) dashboards charts/dashboards --namespace monitoring
