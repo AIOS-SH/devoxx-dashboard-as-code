@@ -1,0 +1,6 @@
+---
+
+targets:
+  staticConfig:
+    static:
+      - https://www.google.fr

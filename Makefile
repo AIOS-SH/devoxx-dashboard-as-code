@@ -20,5 +20,8 @@ json:
 %.jsonnet: json
 	bin/jsonnet -J grafonnet-lib dashboards/$*.jsonnet > charts/dashboards/files/$*.json
 
+local-deployment: dashboards
+	sudo cp charts/dashboards/files/* /var/lib/grafana/dashboards/
+
 deploy-dashboards: dashboards
 	helm $(HELM_UPGRADE) dashboards charts/dashboards --namespace monitoring

@@ -10,3 +10,6 @@ deploy-prom: prereq
 
 deploy-blackbox:
 	helm $(HELM_UPGRADE) blackbox prometheus-community/prometheus-blackbox-exporter --namespace monitoring
+
+deploy-probes:
+	helm $(HELM_UPGRADE) probes charts/probes --namespace monitoring

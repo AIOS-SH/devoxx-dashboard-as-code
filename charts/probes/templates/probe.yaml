@@ -1,0 +1,12 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: {{ include "probes.fullname" . }}
+  labels:
+    release: prom
+    {{- include "probes.labels" . | nindent 4 }}
+spec:
+  targets:
+    {{- toYaml .Values.targets | nindent 4 }}
+  prober:
+    url: blackbox-prometheus-blackbox-exporter:9115
