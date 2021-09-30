@@ -3,4 +3,6 @@
 targets:
   staticConfig:
     static:
-      - https://www.google.fr
+      - https://www.devoxx.fr
+      - https://expired.badssl.com
+      - https://tls-v1-0.badssl.com:1010
