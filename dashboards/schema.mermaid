@@ -4,3 +4,6 @@ graph TD
     kube-apiserver -.-> kube-controller-manager
     kube-apiserver -.-> kube-state-metrics
   end
+  subgraph monitoring
+    grafana -.-> prometheus
+  end

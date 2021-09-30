@@ -1,23 +1,27 @@
-local grafana = import 'grafonnet/grafana.libsonnet';
-local dashboard = grafana.dashboard;
-local template = grafana.template;
-local singlestat = grafana.singlestat;
-local graphPanel = grafana.graphPanel;
-local prometheus = grafana.prometheus;
+local g = import 'grafonnet/grafana.libsonnet';
 
 local kubeSchema = {
-  content: importstr "schema.mermaid",
-  "colors": [
-    "rgba(245, 54, 54, 0.9)",
-    "rgba(50, 172, 45, 0.97)"
-  ],
-  legend: {
-    gradient: { enabled: false, show: true },
-    show: false,
+  fieldConfig: {
+    defaults: {
+      decimals: 0,
+      thresholds: {
+        steps: [
+          { color: "red", value: null },
+          { color: "orange", value: 0.8 },
+          { color: "green", value: 1.0 },
+        ]
+      },
+      unit: "percentunit"
+    },
   },
-  decimals: 0,
-  format: "percentunit",
-  thresholds: "0,1",
+  options: {
+    content: importstr "schema.mermaid",
+    legend: {
+      gradient: {},
+      show: false,
+    },
+    useBackground: true,
+  },
   title: "Kube schema",
   type: "jdbranham-diagram-panel",
   targets: [
@@ -30,33 +34,13 @@ local kubeSchema = {
 };
 
 
-dashboard.new(
+g.dashboard.new(
   'Kube architecture',
   tags=['kube', 'schema'],
   editable=true,
   time_from='now-1h',
   refresh='1m',
-)
-.addTemplate(
-  template.datasource(
-    'PROMETHEUS_DS',
-    'prometheus',
-    'Prometheus',
-    hide='label',
-  )
-)
-.addTemplate(
-  template.new(
-    'instance',
-    '$PROMETHEUS_DS',
-    'label_values(prometheus_build_info, instance)',
-    label='Instance',
-    refresh='time',
-  )
-)
-
-.addPanels(
-  [
-    kubeSchema { gridPos: { h: 14, w: 10, x: 0, y: 0 } },
-  ]
+).addPanel(
+    kubeSchema,
+    gridPos={h: 20, w: 24, x: 0, y: 0}
 )
