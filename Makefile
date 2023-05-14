@@ -1,6 +1,9 @@
-JSONNET_URL   ?= https://github.com/google/jsonnet/releases/download/v0.17.0/jsonnet-bin-v0.17.0-linux.tar.gz
-
 DASHBOARDS   = $(shell ls dashboards | grep "jsonnet$$")
+
+GOPATH ?= bin
+JSONNET ?= $(GOPATH)/bin/jsonnet
+
+export GOPATH
 
 include includes/helm.mk
 include includes/monitoring.mk
@@ -10,15 +13,20 @@ all: prereq grafonnet-lib $(DASHBOARDS)
 
 dashboards: $(DASHBOARDS)
 
-bin/jsonnet:
-	mkdir -p bin
-	cd bin && wget -q -O - $(JSONNET_URL) | tar xfz -
+$(GOPATH)/bin:
+	mkdir -p $(GOPATH)/bin
+
+$(JSONNET): $(GOPATH)/bin
+	go install github.com/google/go-jsonnet/cmd/jsonnet@latest
+	go install github.com/google/go-jsonnet/cmd/jsonnet-lint@latest
+
+prereq: chart-repos $(JSONNET)
 
 json:
 	mkdir json
 
 %.jsonnet: json
-	bin/jsonnet -J grafonnet-lib dashboards/$*.jsonnet > charts/dashboards/files/$*.json
+	$(JSONNET) -J grafonnet-lib -J vendor dashboards/$*.jsonnet > charts/dashboards/files/$*.json
 
 local-dashboards: dashboards
 	sudo cp charts/dashboards/files/* /var/lib/grafana/dashboards/
